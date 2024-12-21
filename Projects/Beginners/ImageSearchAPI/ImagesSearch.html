@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-block: 40px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #767676;
+            font-size: 2rem;
+        }
+
+        header form .search-container {
+            margin-top: 25px;
+        }
+
+        header form .search-container input {
+            width: 100%;
+            font-size: 18px;
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: none;
+            background: #f3f3f3;
+            outline: none;
+        }
+
+        header form .search-container input:focus {
+            background-color: #fff;
+            border: 2px solid black;
+        }
+
+        header form .search-container i {
+            position: absolute;
+            top: 115px;
+            right: 285px;
+            font-size: 25px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .image-container {
+            margin-block: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .image-container img {
+            width: 350px;
+            height: 300px;
+            margin: 5px;
+        }
+
+        .image-container .imageDiv {
+            position: relative;
+        }
+
+        .image-container .overlay {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            transition: height 0.3s ease;
+        }
+
+        .imageDiv:hover .overlay {
+            height: 100%;
+        }
+
+        .imageDiv .overlay h3 {
+            font-size: 15px;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .loadMoreBtn {
+            border: none;
+            background: linear-gradient(white, blueviolet);
+            color: black;
+            margin-top: 2px;
+            font-size: 20px;
+            font-weight: 800;
+            padding: 12px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+        }
+
+        main section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0 50px 0;
+        }
+
+        /* Loading Spinner Style */
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #767676;
+            animation: spin 1s ease infinite;
+            margin: 20px;
+            display: none;
+        }
+        /* Existing styles here */
+
+        /* Add responsive styles below */
+        @media only screen and (max-width: 1200px) {
+            body {
+                margin-block: 30px;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .image-container img {
+                width: 300px;
+                height: 250px;
+            }
+
+            header form .search-container i {
+                top: 95px;
+                /* Adjusted for better alignment */
+                right: 25px;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header form .search-container input {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .image-container img {
+                width: 250px;
+                height: 200px;
+            }
+
+            .image-container .imageDiv .overlay h3 {
+                font-size: 12px;
+            }
+
+            .loadMoreBtn {
+                font-size: 18px;
+                padding: 10px;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            header form .search-container input {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .image-container img {
+                width: 200px;
+                height: 150px;
+            }
+
+            .image-container .imageDiv .overlay h3 {
+                font-size: 10px;
+            }
+
+            .loadMoreBtn {
+                font-size: 16px;
+                padding: 8px;
+            }
+
+            header form .search-container i {
+                top: 85px;
+                /* Adjusted for better alignment */
+                right: 15px;
+            }
+        }
+    </style>
+    <title>Image-Search</title>
+</head>
+
+<body>
+    <header>
+        <h1>Image-Search App</h1>
+        <form action="">
+            <div class="search-container">
+                <input type="search" placeholder="search Images" class="search-input" />
+                <span><i class="ri-search-2-line"></i></span>
+            </div>
+        </form>
+    </header>
+    <main>
+        <section>
+            <div class="image-container">
+                <h2>Search them [Images] and Get them........</h2>
+            </div>
+            <button class="loadMoreBtn">load more</button>
+        </section>
+    </main>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner"></div>
+    <script>
+        const searchForm = document.querySelector('form');
+        const imageContainer = document.querySelector('.image-container');
+        const searchInput = document.querySelector('.search-input');
+        const loadMoreBtn = document.querySelector('.loadMoreBtn');
+        const loadingSpinner = document.querySelector('.loading-spinner');
+
+        const accessKey = `pmjorCBwhlIpT79qut_dpcUgkST4guGWCfT9RIem9mY`;
+
+        let page = 1;
+
+        //function to fetch images using Unsplash API
+        const fetchImages = async (query, pageNo) => {
+            try {
+                // Show loading spinner
+                loadingSpinner.style.display = 'block';
+                if (pageNo === 1) {
+                    imageContainer.innerHTML = "";
+                }
+
+                const url = `https://api.unsplash.com/search/photos?query=${query}&per_page=28&page=${pageNo}&client_id=${accessKey}`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.results.length > 1) {
+                    data.results.forEach(photos => {
+                        //creating imageDiv 
+                        const imageElement = document.createElement('div');
+                        imageElement.classList.add('imageDiv');
+                        imageElement.innerHTML = `<img src="${photos.urls.regular}" alt="${photos.alt_description || 'Image result'}">`;
+                        
+                        //creating overlay
+                        const overlayElement = document.createElement('div');
+                        overlayElement.classList.add('overlay');
+
+                        //creating overlayText
+                        const overlayText = document.createElement('h3');
+                        overlayText.innerText = `${photos.alt_description}`;
+
+                        //appending
+                        imageElement.appendChild(overlayElement);
+                        overlayElement.appendChild(overlayText);
+                        imageContainer.appendChild(imageElement);
+                    });
+
+                    // To hide load more button if we reach the last page
+                    if (data.total_pages === pageNo) {
+                        loadMoreBtn.style.display = "none";
+                    } else {
+                        loadMoreBtn.style.display = "block";
+                    }
+                } else {
+                    imageContainer.innerHTML = `<h2>search properly</h2>`;
+                }
+            } catch (error) {
+                imageContainer.innerHTML = `<h2>Try Again Later , Check Internet Connection</h2>`;
+            } finally {
+                // Hide loading spinner
+                loadingSpinner.style.display = 'none';
+            }
+        };
+
+        // Adding EventListener to search form
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const inputText = searchInput.value.trim();
+            if (inputText !== "") {
+                page = 1;
+                fetchImages(inputText, page);
+            } else {
+                imageContainer.innerHTML = `<h2>Search something</h2>`;
+            }
+        });
+
+        // Adding EventListener to LoadMore button to fetch more Images
+        loadMoreBtn.addEventListener('click', () => {
+            fetchImages(searchInput.value.trim(), ++page);
+        });
+    </script>
+</body>
+
+</html>

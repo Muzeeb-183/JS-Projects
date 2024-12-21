@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #display-joke{
+            padding: 35px;
+            margin: 10px;
+            font-weight: 800;
+            width: 600px;
+            height: 80px;
+            border: 2px solid white;
+        }
+        .btn{
+            position: relative;
+            left: 45%;
+            top: 15px;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: none;
+            color: #fff;
+            border-radius: 5px;
+        }
+        .btn:hover{
+            background-color: blueviolet;
+            cursor: pointer;
+        }
+        .btn:active{
+            padding: 15px;
+            transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+    </style>
+    <title>Jokes Generator</title>
+</head>
+<body>
+
+    <section class="container">
+        <div id="display-joke">Click on the button to get a new Joke</div>
+        <button class="btn" id="getJoke">Get Joke</button>
+    </section>
+    <script>
+
+        let displayJoke = document.querySelector('#display-joke');
+        const buttton = document.querySelector('.btn');
+        
+        buttton.addEventListener('click',getRandomJoke);
+
+        function getRandomJoke(){
+            const ajax = new XMLHttpRequest();
+            const url = "https://api.chucknorris.io/jokes/random";
+            ajax.open('GET',url,true) 
+
+            ajax.onreadystatechange = () =>{
+                // console.log(ajax.readyState); 2 3 4
+                if(ajax.status === 200 && ajax.readyState === 4){
+                    let data = JSON.parse(ajax.responseText)
+                    displayJoke.innerHTML = `${data.value}`;
+                }
+                else{
+                    ajax.onerror = onerror();
+                }
+            }
+            ajax.send()
+        }
+        function onerror(){
+            displayJoke.textContent = `something went wrong :(`;
+        }
+    </script>
+</body>
+</html>

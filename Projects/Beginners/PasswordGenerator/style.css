@@ -1,0 +1,77 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right bottom,#ffa585,#45c5d8);
+    color: #fff;
+}
+.container{
+    border: 1px solid #fff;
+    border-radius: 10px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    box-shadow: 8px 8px 4px #909090,8px 8px 4px #575757;
+}
+.container h1{
+    font-size: 1.5rem;
+    margin-block: 8px;   /*gets margin at top and bottom both at a time */
+}
+.passBox{
+    background-color: #fff;
+    border: none;
+    outline: none;
+    padding: 10px;
+    width: 385px;
+    border-radius: 10px;
+    font-size: 20px;
+    margin-block: 8px;  /* "margin block" is used to give marign at top and bottom at a time and "margin inline" is used to give margin at left and right at a time*/
+}
+.input-box{
+    position: relative;
+}
+.input-box span{
+    color: black;
+    position: absolute;
+    right: 5px;
+    top: 16px;
+    cursor: pointer;
+    font-size: 25px;
+    z-index: 2;
+}
+.row{
+    display: flex;
+    margin-block:8px;   
+}
+.row p, .row label{
+    flex-basis: 110%;  /* by this flex-basis the p will take 100% of space as a block leverl element and the element beside it will be moved to the end */
+    font-size: 18px;
+}
+.row input{
+    height: 30px;
+    width: 30px;
+    margin-left: 90px;
+}
+
+.genBtn{
+    border: none;
+    outline: none;
+    background-color: #2c619e;
+    padding: 12px 24px;
+    color: #fff;
+    margin-block: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.genBtn:hover{
+    background-color: #0066ff;
+}

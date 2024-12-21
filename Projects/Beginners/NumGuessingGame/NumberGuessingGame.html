@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        nav {
+            width: 100%;
+            background-color: #343a40;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav h2 {
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        nav h2:hover {
+            border-bottom: 2px solid #ff8c00;
+        }
+
+        h1 {
+            color: #343a40;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+            color: #343a40;
+        }
+
+        .input,
+        .submit {
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1.1rem;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input:focus,
+        .submit:focus {
+            border-color: #ff8c00;
+            box-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+        }
+
+        .submit {
+            background-color: #ff8c00;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #343a40;
+        }
+
+        .newGame {
+            background-color: #28a745;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .newGame:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 20px;
+                width: 80%;
+                max-width: 500px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .input,
+            .submit {
+                font-size: 1rem;
+            }
+
+            nav {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .input,
+            .submit {
+                font-size: 0.95rem;
+            }
+
+            .container {
+                padding: 15px;
+                width: 90%;
+                max-width: 450px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .input,
+            .submit {
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 10px;
+                width: 90%;
+                max-width: 400px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 0;
+            }
+        }
+    </style>
+    <title>NUMBER GUESSING GAME</title>
+</head>
+
+<body>
+    <nav>
+        <h2>HOME</h2>
+        <h2>MY-SELF</h2>
+    </nav>
+    <div class="container">
+        <h1>NUMBER GUESSING GAME</h1>
+        <p>Try and Guess a random Number between 1 to 50</p>
+        <p>You have 10 attempts to guess the right number</p>
+        <form action="">
+            <input type="number" placeholder="Enter your guess" class="input"><br><br>
+            <input type="button" value="Submit Your Guess" class="submit">
+        </form>
+        <div class="result">
+            <p>All Guesses: <span class="allGuesses"></span></p>
+            <p>Remaining Guesses: <span class="remainingGuesses"></span></p>
+            <div class="lowORhi"></div>
+        </div>
+    </div>
+
+    <script>
+        let randomNumber = parseInt(Math.floor(Math.random() * 50) + 1);
+        console.log(randomNumber);
+        let input = document.querySelector('.input');
+        let submit = document.querySelector('.submit');
+        let allGuesses = document.querySelector('.allGuesses');
+        let remainingGuesses = document.querySelector('.remainingGuesses');
+        let result = document.querySelector('.result');
+        let loworhi = document.querySelector('.lowORhi');
+        let newGame;
+        let numGuess = 1;
+
+        submit.addEventListener('click', (e) => {
+            e.preventDefault();
+            let guess = parseInt(input.value);
+            validateGuess(guess);
+        });
+
+        function validateGuess(guess) {
+            if (isNaN(guess) || guess <= 0 || guess > 50) {
+                alert('Make sure you enter a valid number between 1 and 50');
+            } else {
+                if (numGuess === 10) {
+                    displayGuess(guess);
+                    displayMessage(`Game Over, Random Number was ${randomNumber}`);
+                    endGame();
+                } else {
+                    displayGuess(guess);
+                    checkGuess(guess);
+                }
+            }
+        }
+
+        function displayGuess(guess) {
+            input.value = '';
+            allGuesses.innerHTML += `${guess} `;
+            numGuess++;
+            remainingGuesses.innerHTML = `${11 - numGuess}`;
+        }
+
+        function checkGuess(guess) {
+            if (guess === randomNumber) {
+                displayMessage(`You got it! Your guess: ${guess} is correct.`);
+                endGame();
+            } else {
+                if (guess < randomNumber) {
+                    displayMessage(`Your guess is too low.`);
+                } else if (guess > randomNumber) {
+                    displayMessage(`Your guess is too high.`);
+                }
+            }
+        }
+
+        function displayMessage(msg) {
+            loworhi.innerHTML = `<h2>${msg}</h2>`;
+        }
+
+        function endGame() {
+            input.value = '';
+            submit.setAttribute('disabled', '');
+            newGame = document.createElement('button');
+            newGame.innerHTML = `Start New Game`;
+            newGame.classList.add('newGame');
+            result.appendChild(newGame);
+
+            newGame.addEventListener('click', () => {
+                startNew();
+            });
+        }
+
+        function startNew() {
+            randomNumber = Math.floor(Math.random() * 50 + 1);
+            numGuess = 1;
+            allGuesses.innerHTML = '';
+            submit.removeAttribute('disabled');
+            loworhi.innerHTML = '';
+            remainingGuesses.innerHTML = `${11 - numGuess}`;
+            result.removeChild(newGame);
+        }
+    </script>
+</body>
+
+</html>
